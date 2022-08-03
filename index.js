@@ -16,29 +16,42 @@ let arr = [
     task: "learn about js",
   },
 ];
-document.getElementById("batonas").addEventListener("click", () => {
+//function to draw a new task
+const addTask = () => {
   const inputValue = document.getElementById("taskInput").value;
-  const form = document.getElementById("taskInput");
-  //tikrinam ar tuscias input stringas
+  const input = document.getElementById("taskInput");
+  //  let input = obj1
   if (!inputValue.trim()) {
-    alert("NO TASK ENTERED");
-    //trina para6yta forma//
-    form.value = "";
+    alert(" nothink to do");
+    input.value = null;
     return;
   }
-  const newTask = { id: new Date().getTime(), task: inputValue };
-  form.value = "";
+
+  const newTask = {
+    id: new Date().getTime(),
+    task: inputValue,
+  };
 
   arr.unshift(newTask);
+  input.value = null;
   drawTaskList();
+};
+
+document.getElementById("batonas").addEventListener("click", addTask);
+
+//draw new task on Enter
+document.getElementById("taskInput").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    addTask();
+  }
 });
 
-function deleteItem() {
-  console.log(this.id);
-  arr = arr.filter((val) => val.id !== +this.id);
+// function deleteItem() {
+//   console.log(this.id);
+//   arr = arr.filter((val) => val.id !== +this.id);
 
-  drawTaskList();
-}
+//   drawTaskList();
+// }
 
 const drawTaskList = () => {
   const tasksList = document.getElementById("tasksList");
@@ -48,28 +61,45 @@ const drawTaskList = () => {
     const myLI = document.createElement("li");
     const myInput = document.createElement("input");
     const myLabel = document.createElement("label");
+    const btnGroup = document.createElement("div");
     const deleteBtn = document.createElement("button");
+    const editBtn = document.createElement("button");
     //adding styles//
     myLI.className = "container list-group-item ";
-    myInput.className = "form-check-input me-1 col-2";
-    myLabel.className = "form-check-label col-8";
-    deleteBtn.className = "btn btn-warning btn-sm col-2";
-
+    btnGroup.className = "btn-group col-4";
+    myInput.className = "form-check-input me-1 col-1";
+    myLabel.className = "form-check-label col-7";
+    deleteBtn.className = "btn btn-warning btn-sm ";
+    editBtn.className = "btn btn-info btn-sm";
     //adding other attributes
+
     //input
     myInput.setAttribute("type", "checkbox");
     myInput.setAttribute("id", ind);
     //label
     myLabel.setAttribute("for", ind);
     myLabel.textContent = value.task;
+    // set atribute
+    btnGroup.setAttribute("role", "group");
     //delete btn
     deleteBtn.setAttribute("type", "button");
-    deleteBtn.setAttribute("id", value.id);
     deleteBtn.textContent = "delete";
-    deleteBtn.onclick = deleteItem;
+    // edit button
+    editBtn.setAttribute("type", "button");
+    editBtn.textContent = "Edit";
+    // append buttons
+    btnGroup.append(editBtn, deleteBtn);
     //apend childs
-    myLI.append(myInput, myLabel, deleteBtn);
+    myLI.append(myInput, myLabel, btnGroup);
     tasksList.append(myLI);
+    //
+    editBtn.addEventListener("click", () => {
+      console.log("veikia");
+    });
+    deleteBtn.addEventListener("click", () => {
+      arr = arr.filter((val) => val.id !== value.id);
+      drawTaskList();
+    });
   });
 };
 
