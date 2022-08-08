@@ -79,7 +79,7 @@ const drawTaskList = () => {
     //label
     myLabel.setAttribute("for", ind);
     myLabel.textContent = singleTask.task;
-    // set atribute
+    // set attribute
     btnGroup.setAttribute("role", "group");
     //delete btn
     deleteBtn.setAttribute("type", "button");
