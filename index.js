@@ -56,7 +56,7 @@ document.getElementById("taskInput").addEventListener("keypress", (e) => {
 const drawTaskList = () => {
   const tasksList = document.getElementById("tasksList");
   tasksList.innerHTML = null;
-  arr.forEach((value, ind) => {
+  arr.forEach((singleTask, ind) => {
     //creating elements//
     const myLI = document.createElement("li");
     const myInput = document.createElement("input");
@@ -78,12 +78,12 @@ const drawTaskList = () => {
     myInput.setAttribute("id", ind);
     //label
     myLabel.setAttribute("for", ind);
-    myLabel.textContent = value.task;
+    myLabel.textContent = singleTask.task;
     // set atribute
     btnGroup.setAttribute("role", "group");
     //delete btn
     deleteBtn.setAttribute("type", "button");
-    deleteBtn.textContent = "delete";
+    deleteBtn.textContent = "Delete";
     // edit button
     editBtn.setAttribute("type", "button");
     editBtn.textContent = "Edit";
@@ -93,12 +93,24 @@ const drawTaskList = () => {
     myLI.append(myInput, myLabel, btnGroup);
     tasksList.append(myLI);
     //
-    editBtn.addEventListener("click", () => {
-      console.log("veikia");
-    });
+
     deleteBtn.addEventListener("click", () => {
-      arr = arr.filter((val) => val.id !== value.id);
+      arr = arr.filter((filterTask) => filterTask.id !== singleTask.id);
       drawTaskList();
+    });
+
+    editBtn.addEventListener("click", () => {
+      console.log(singleTask);
+      const updatedTask = prompt("Update your task", singleTask.task);
+      if (updatedTask?.trim()) {
+        const newTask = {
+          ...singleTask,
+          task: updatedTask,
+        };
+
+        arr.splice(ind, 1, newTask);
+        drawTaskList();
+      }
     });
   });
 };
