@@ -1,21 +1,3 @@
-let arr = [
-  {
-    id: 111,
-    task: "buy milk",
-  },
-  {
-    id: 222,
-    task: "buy egg",
-  },
-  {
-    id: 333,
-    task: "watch any js video",
-  },
-  {
-    id: 444,
-    task: "learn about js",
-  },
-];
 //function to draw a new task
 const addTask = () => {
   const inputValue = document.getElementById("taskInput").value;
@@ -31,8 +13,11 @@ const addTask = () => {
     id: new Date().getTime(),
     task: inputValue,
   };
+  const lsArr = JSON.parse(window.localStorage.getItem("tasks"));
+  let arr = lsArr ? lsArr : [];
 
   arr.unshift(newTask);
+  window.localStorage.setItem("tasks", JSON.stringify(arr));
   input.value = null;
   drawTaskList();
 };
@@ -46,16 +31,13 @@ document.getElementById("taskInput").addEventListener("keypress", (e) => {
   }
 });
 
-// function deleteItem() {
-//   console.log(this.id);
-//   arr = arr.filter((val) => val.id !== +this.id);
-
-//   drawTaskList();
-// }
-
 const drawTaskList = () => {
   const tasksList = document.getElementById("tasksList");
   tasksList.innerHTML = null;
+  // user data from localStorage
+  const lsArr = JSON.parse(window.localStorage.getItem("tasks"));
+  let arr = lsArr ? lsArr : [];
+
   arr.forEach((singleTask, ind) => {
     //creating elements//
     const myLI = document.createElement("li");
@@ -96,19 +78,19 @@ const drawTaskList = () => {
 
     deleteBtn.addEventListener("click", () => {
       arr = arr.filter((filterTask) => filterTask.id !== singleTask.id);
+      window.localStorage.setItem("tasks", JSON.stringify(arr));
       drawTaskList();
     });
 
     editBtn.addEventListener("click", () => {
-      console.log(singleTask);
       const updatedTask = prompt("Update your task", singleTask.task);
       if (updatedTask?.trim()) {
         const newTask = {
           ...singleTask,
           task: updatedTask,
         };
-
         arr.splice(ind, 1, newTask);
+        window.localStorage.setItem("tasks", JSON.stringify(arr));
         drawTaskList();
       }
     });
